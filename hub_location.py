@@ -92,14 +92,14 @@ if __name__ == "__main__":
 
     # Constraint 1
     for i in range(node_num):
-        hub_location += lpSum([Z[i][k] for k in range(node_num) if i != k]) == 1
+        hub_location += lpSum([Z[i][k] for k in range(node_num)]) == 1
 
     # Constraint 2
     for k in range(node_num):
         for l in range(node_num):
             if l > k:
                 hub_location += Z[k][l] + Y[k][l] <= Z[l][l]
-                hub_location += Z[k][l] + Y[k][l] <= Z[k][k]
+                hub_location += Z[l][k] + Y[k][l] <= Z[k][k]
 
     # Constraint 3
     for i in range(node_num):
@@ -108,11 +108,12 @@ if __name__ == "__main__":
                 if l > k:
                     hub_location += X[i][k][l] + X[i][l][k] <= O[i]*Y[k][l]
 
-    #Constraint 4
+    # Constraint 4
     for i in range(node_num):
         for k in range(node_num):
-            hub_location += O[i]*Z[i][k] + lpSum([X[i][l][k] for l in range(node_num)]) ==\
-                            lpSum([X[i][k][l] for l in range(node_num)]) + lpSum([flow[(i + 1, j + 1)]*Z[i][k] for j in range(node_num)])
+            if k != i:
+                hub_location += O[i]*Z[i][k] + lpSum([X[i][l][k] for l in range(node_num) if l != k]) ==\
+                            lpSum([X[i][k][l] for l in range(node_num) if l != k]) + lpSum([flow[(i + 1, j + 1)]*Z[j][k] for j in range(node_num)])
 
     # Constraint 5
     for k in range(node_num):
