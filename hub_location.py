@@ -4,7 +4,7 @@ from pulp import *
 
 if __name__ == "__main__":
 
-    InputData = "InputDataHubSmallInstance.xlsx"
+    InputData = "InputDataHubLargeInstance.xlsx"
 
 
     # Input Data Preparation #
@@ -68,13 +68,13 @@ if __name__ == "__main__":
     for k in range(node_num):
         Y.append([])
         for l in range(node_num):
-            Y[k].append(LpVariable('Y'+str(k)+str(l), lowBound=0, upBound=1, cat='Integer'))
+            Y[k].append(LpVariable('Y'+str(k)+'-'+str(l), lowBound=0, upBound=1, cat='Integer'))
 
     Z = []
     for k in range(node_num):
         Z.append([])
         for l in range(node_num):
-            Z[k].append(LpVariable('Z'+str(k)+str(l), lowBound=0, upBound=1, cat='Integer'))
+            Z[k].append(LpVariable('Z'+str(k)+'-'+str(l), lowBound=0, upBound=1, cat='Integer'))
 
     X = []
     for i in range(node_num):
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         for j in range(node_num):
             X[i].append([])
             for k in range(node_num):
-                X[i][j].append(LpVariable('X'+str(i)+str(j)+str(k), lowBound=0))
+                X[i][j].append(LpVariable('X'+str(i)+'-'+str(j)+'-'+str(k), lowBound=0))
 
     # Objective function
     hub_location += lpSum([fixCost[i] * Z[i][i] for i in range(node_num)]) +\
@@ -123,6 +123,6 @@ if __name__ == "__main__":
     # Constraint 6
     hub_location += lpSum([Y[k][l] for k in range(node_num) for l in range(node_num)]) == lpSum([Z[k][k] for k in range(node_num)]) - 1
 
-    hub_location.solve()
+    hub_location.solve(PULP_CBC_CMD(msg=True))
 
     print(value(hub_location.objective))
