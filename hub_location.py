@@ -117,9 +117,8 @@ if __name__ == "__main__":
 
     # Constraint 5
     for k in range(node_num):
-        for l in range(node_num):
-            if k != l:
-                hub_location += lpSum([X[i][k][l] for i in range(node_num) if k != i]) + lpSum([O[i]*Z[i][k] for i in range(node_num) if k != i]) <= cap[k]
+        # for l in range(node_num):
+        hub_location += lpSum([X[i][l][k] for i in range(node_num) for l in range(node_num) if k != l]) + lpSum([O[i]*Z[i][k] for i in range(node_num)]) <= cap[k]
 
     # Constraint 6
     hub_location += lpSum([Y[k][l] for k in range(node_num) for l in range(node_num)]) == lpSum([Z[k][k] for k in range(node_num)]) - 1
