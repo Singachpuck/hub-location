@@ -4,7 +4,7 @@ from pulp import *
 
 if __name__ == "__main__":
 
-    InputData = "InputDataHubLargeInstance.xlsx"
+    InputData = "data/InputDataHubLargeInstance.xlsx"
 
 
     # Input Data Preparation #
